@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<scene version="0.5.0">
+	<integrator type="path">
+            <integer name="maxDepth" value="128"/>
+        </integrator>
+
+
+	<sensor type="perspective">
+		<string name="fovAxis" value="smaller"/>
+		<float name="nearClip" value="0.009"/>
+		<float name="farClip" value="4.5"/>
+		<float name="focusDistance" value="1000"/>
+		<transform name="toWorld">
+			<lookAt origin="0, 1, 3.2" target="0, 1, 3.1" up="0, 1, 0"/>
+		</transform>
+		<float name="fov" value="50"/>
+
+		<sampler type="halton">
+			<integer name="sampleCount" value="400"/>
+		</sampler>
+
+		<film type="hdrfilm">
+			<integer name="width" value="1024"/>
+			<integer name="height" value="1024"/>
+
+			<rfilter type="box"/>
+			<boolean name="banner" value="false"/>
+		</film>
+	</sensor>
+
+	<bsdf type="diffuse" id="box">
+		<rgb name="reflectance" value="0.725, 0.71, 0.68"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="white">
+		<rgb name="reflectance" value="0.725, 0.71, 0.68"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="red">
+		<rgb name="reflectance" value="0.63, 0.065, 0.05"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="green">
+		<rgb name="reflectance" value="0.14, 0.45, 0.091"/>
+	</bsdf>
+
+	<bsdf type="diffuse" id="light">
+		<rgb name="reflectance" value="1.0, 1.0, 1.0"/>
+	</bsdf>
+
+	<shape type="obj">
+		<string name="filename" value="cbox_luminaire.obj"/>
+		<transform name="toWorld">
+			<translate x="0" y="0" z="0"/>
+		</transform>
+
+		<ref id="light"/>
+
+		<emitter type="area">
+                        <spectrum name="radiance" value="4, 4, 4"/>
+			<!-- 
+                        <spectrum name="radiance" value="25, 25, 25"/>
+                        <spectrum name="intensity" value="4"/>
+                        -->
+		</emitter>
+	</shape>
+        <!--
+       <emitter type="spot">
+               <spectrum name="intensity" value="4"/>
+                <transform name="toWorld">
+                    <lookat origin="-0.005, 1.98, -0.03" target="-0.005, 0.0, -0.03"/>
+                </transform>
+                <float name="cutoffAngle" value="90"/>
+                <float name="beamWidth" value="90"/>
+       </emitter>
+       -->
+        <!--
+	<emitter type="point">
+		<spectrum name="intensity" value="4"/>
+		<point name="position" x="-0.005" y="1.98" z="-0.03"/>
+	</emitter>
+       -->
+
+	<shape type="obj">
+		<string name="filename" value="cbox_floor.obj"/>
+
+		<ref id="white"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="cbox_ceiling.obj"/>
+
+		<ref id="white"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="cbox_back.obj"/>
+
+		<ref id="white"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="cbox_greenwall.obj"/>
+
+		<ref id="green"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="cbox_redwall.obj"/>
+
+		<ref id="red"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="cbox_smallbox.obj"/>
+
+		<ref id="box"/>
+	</shape>
+
+	<shape type="obj">
+		<string name="filename" value="cbox_largebox.obj"/>
+
+		<ref id="box"/>
+	</shape>
+</scene>

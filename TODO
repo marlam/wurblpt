@@ -1,0 +1,9 @@
+- Cleanups:
+  - in GGX, get rid of FresnelSchlick and use real formula instead,
+    then remove FresnelSchlick from fresnel.hpp
+  - replace cstdio/printf everywhere once std::format is available
+
+- Implement a complete material model for physically-based rendering,
+  with an import via ASSIMP (or via the PBR extension of tiny_obj_loader).
+  The model could be based on J. Frohne, Material Models for Sensor Simulation,
+  Ms Thesis.
