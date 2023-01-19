@@ -189,8 +189,6 @@ int main(int argc, char* argv[])
 
     Camera camera(optics, new CameraAnimation);
 
-    std::filesystem::remove("toomuch.tgd");
-    std::filesystem::remove("toomuch-postproc.tgd");
     float start = 0.0f;
     float end = 36.0f;
     float frameDuration = 1.0f / 25.0f;
