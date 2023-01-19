@@ -29,12 +29,13 @@
 #include <map>
 #include <filesystem>
 #include <fstream>
+#include <vector>
 
-#include "animation.hpp"
 
 namespace WurblPT {
 
 class Hitable;
+class AnimationCache;
 
 class SceneComponent
 {

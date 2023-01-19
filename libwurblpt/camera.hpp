@@ -25,6 +25,11 @@
 
 #pragma once
 
+#include <cassert>
+
+#include <memory>
+
+#include "transformation.hpp"
 #include "optics.hpp"
 #include "animation.hpp"
 #include "ray.hpp"

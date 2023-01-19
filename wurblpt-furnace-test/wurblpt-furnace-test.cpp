@@ -23,9 +23,6 @@
  * SOFTWARE.
  */
 
-#include <cstdio>
-#include <filesystem>
-
 #include <tgd/array.hpp>
 #include <tgd/io.hpp>
 

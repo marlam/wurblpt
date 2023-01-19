@@ -25,11 +25,23 @@
 
 #pragma once
 
+#include <omp.h>
+
+#include <cstdio>
+#include <cstdlib>
+
+#include <vector>
+#include <algorithm>
+
 #include "aabb.hpp"
+#include "animation.hpp"
 #include "hitable.hpp"
 
 
 namespace WurblPT {
+
+class Ray;
+class Prng;
 
 class AABBSorter
 {

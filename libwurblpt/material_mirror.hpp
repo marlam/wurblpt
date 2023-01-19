@@ -26,7 +26,6 @@
 #pragma once
 
 #include "material.hpp"
-#include "prng.hpp"
 
 
 namespace WurblPT {

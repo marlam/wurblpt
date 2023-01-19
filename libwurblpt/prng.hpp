@@ -24,7 +24,8 @@
 #pragma once
 
 #include <cstdint>
-#include <cstdio>
+
+#include "gvm.hpp"
 
 
 namespace WurblPT {

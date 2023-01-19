@@ -26,7 +26,9 @@
 #pragma once
 
 #include <cassert>
+
 #include <vector>
+#include <limits>
 
 #include "transformation.hpp"
 

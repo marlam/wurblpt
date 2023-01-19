@@ -25,6 +25,8 @@
 
 #pragma once
 
+#include <cassert>
+
 #include "mesh.hpp"
 
 

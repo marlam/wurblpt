@@ -23,10 +23,7 @@
 
 #pragma once
 
-#include <unistd.h>
-
 #include <cassert>
-#include <cstdio>
 
 #include <vector>
 #include <thread>
@@ -269,7 +266,7 @@ public:
         MPI_Barrier(MPI_COMM_WORLD);
 #endif
         if (_mpiWorldSize > 1) {
-            assert(child);
+            assert(_child);
             delete _child;
             _child = nullptr;
             if (_main) {

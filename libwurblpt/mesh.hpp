@@ -31,6 +31,7 @@
 #include "material.hpp"
 #include "scene_component.hpp"
 #include "geometryproc.hpp"
+#include "transformation.hpp"
 
 
 namespace WurblPT {

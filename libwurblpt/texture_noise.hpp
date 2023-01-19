@@ -29,6 +29,7 @@
 
 #include "texture.hpp"
 #include "prng.hpp"
+#include "sampler.hpp"
 
 
 namespace WurblPT {

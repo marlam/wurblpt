@@ -26,6 +26,7 @@
 #pragma once
 
 #include "hitable.hpp"
+#include "sampler.hpp"
 
 
 namespace WurblPT {

@@ -27,8 +27,14 @@
 
 #pragma once
 
+#include <algorithm>
+
 #include <tgd/array.hpp>
+
 #include "optics.hpp"
+#include "color.hpp"
+#include "texture.hpp"
+#include "texture_image.hpp"
 
 
 namespace WurblPT {

@@ -27,11 +27,11 @@
 
 #include "scene_component.hpp"
 #include "hitable_sphere.hpp"
+#include "material.hpp"
+#include "generator.hpp"
 
 
 namespace WurblPT {
-
-class Material;
 
 class Sphere : public SceneComponent
 {

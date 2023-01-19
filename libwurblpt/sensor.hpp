@@ -27,6 +27,7 @@
 
 #include <tgd/array.hpp>
 
+#include "hitable.hpp"
 #include "ray.hpp"
 
 

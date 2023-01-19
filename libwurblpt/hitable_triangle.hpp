@@ -26,7 +26,6 @@
 #pragma once
 
 #include <cassert>
-#include <limits>
 
 #include "hitable.hpp"
 #include "mesh.hpp"

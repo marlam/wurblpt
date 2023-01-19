@@ -27,6 +27,7 @@
 
 #include "hitable.hpp"
 #include "bvh.hpp"
+#include "prng.hpp"
 
 
 namespace WurblPT {

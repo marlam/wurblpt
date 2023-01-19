@@ -25,9 +25,12 @@
 
 #pragma once
 
+#include <cassert>
+
 #include <vector>
 
 #include "gvm.hpp"
+#include "constants.hpp"
 
 
 namespace WurblPT {

@@ -44,6 +44,7 @@
 #include <random>
 
 #include "sensor.hpp"
+#include "material.hpp"
 
 
 namespace WurblPT {

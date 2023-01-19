@@ -26,13 +26,13 @@
 #pragma once
 
 #include <cstdio>
-#include <filesystem>
 
 #include <tgd/array.hpp>
 #include <tgd/io.hpp>
 
 #include "scene_component.hpp"
 #include "color.hpp"
+#include "animation.hpp"
 
 
 namespace WurblPT {

@@ -25,8 +25,8 @@
 
 #pragma once
 
+#include "gvm.hpp"
 #include "ray.hpp"
-#include "transformation.hpp"
 
 
 namespace WurblPT {

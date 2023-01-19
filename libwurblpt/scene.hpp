@@ -26,6 +26,7 @@
 #pragma once
 
 #include <cassert>
+#include <cstdio>
 
 #include <vector>
 #include <memory>

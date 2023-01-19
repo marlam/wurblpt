@@ -25,14 +25,14 @@
 
 #pragma once
 
-#include "ray.hpp"
 #include "aabb.hpp"
-#include "animation.hpp"
 #include "prng.hpp"
+#include "animation.hpp"
 
 
 namespace WurblPT {
 
+class Ray;
 class Material;
 class Hitable;
 
