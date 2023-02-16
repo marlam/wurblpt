@@ -86,7 +86,7 @@ public:
     float Ns, Ni, d;
     std::string map_Kd, map_Ks, map_Ke;
     std::string map_Ns, map_Ni, map_d;
-    std::string map_bump;
+    std::string norm;
 
     ObjMaterial() : Kd(0.0f), Ks(0.0f), Ke(0.0f), Ns(0.0f), Ni(1.0f), d(1.0f)
     {
@@ -121,8 +121,8 @@ public:
             materialOut << "map_Ni " << map_Ni << std::endl;
         if (map_d.size() > 0)
             materialOut << "map_d " << map_d << std::endl;
-        if (map_bump.size() > 0)
-            materialOut << "map_bump " << map_bump << std::endl;
+        if (norm.size() > 0)
+            materialOut << "norm " << norm << std::endl;
     }
 };
 

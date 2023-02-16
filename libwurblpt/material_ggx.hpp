@@ -272,7 +272,7 @@ public:
         }
         // shininess texture export does not make sense because we have roughness in the texture
         if (normalTex) {
-            objMaterial.map_bump = normalTex->exportToObj(geometryOut, materialOut, globalVertexIndex, false, animationCache, basePath, baseName, sceneExportCache);
+            objMaterial.norm = normalTex->exportToObj(geometryOut, materialOut, globalVertexIndex, false, animationCache, basePath, baseName, sceneExportCache);
         }
     }
 };

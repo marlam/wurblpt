@@ -348,7 +348,7 @@ public:
         if (opacityTex)
             objMaterial.map_d = opacityTex->exportToObj(geometryOut, materialOut, globalVertexIndex, false, animationCache, basePath, baseName, sceneExportCache);
         if (normalTex)
-            objMaterial.map_bump = normalTex->exportToObj(geometryOut, materialOut, globalVertexIndex, false, animationCache, basePath, baseName, sceneExportCache);
+            objMaterial.norm = normalTex->exportToObj(geometryOut, materialOut, globalVertexIndex, false, animationCache, basePath, baseName, sceneExportCache);
         if (emissiveTex)
             objMaterial.map_Ke = emissiveTex->exportToObj(geometryOut, materialOut, globalVertexIndex, false, animationCache, basePath, baseName, sceneExportCache);
     }

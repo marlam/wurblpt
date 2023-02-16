@@ -108,7 +108,7 @@ public:
         vec3 n = vec3(0.0f, 0.0f, 1.0f);
         objMaterial.Kd = fromVec3f(brdf.eval(toVec3f(-n), toVec3f(n)));
         if (normalTex) {
-            objMaterial.map_bump = normalTex->exportToObj(geometryOut, materialOut, globalVertexIndex, false, animationCache, basePath, baseName, sceneExportCache);
+            objMaterial.norm = normalTex->exportToObj(geometryOut, materialOut, globalVertexIndex, false, animationCache, basePath, baseName, sceneExportCache);
         }
     }
 };
@@ -255,7 +255,7 @@ public:
         vec4 att = toAttenuation(attenuationSpectrum);
         objMaterial.Kd = att.rgb();
         if (normalTex) {
-            objMaterial.map_bump = normalTex->exportToObj(geometryOut, materialOut, globalVertexIndex, false, animationCache, basePath, baseName, sceneExportCache);
+            objMaterial.norm = normalTex->exportToObj(geometryOut, materialOut, globalVertexIndex, false, animationCache, basePath, baseName, sceneExportCache);
         }
     }
 };
