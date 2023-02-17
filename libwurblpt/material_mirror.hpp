@@ -36,17 +36,17 @@ namespace WurblPT {
 class MaterialMirror final : public Material
 {
 public:
-    const vec4 surfaceColor;
-    const Texture* surfaceColorTex;
+    const vec4 color;
+    const Texture* colorTex;
     const bool haveNIR;
 
-    MaterialMirror(const vec4& surfaceColor = vec4(1.0f), const Texture* tex = nullptr) :
-        Material(nullptr), surfaceColor(surfaceColor), surfaceColorTex(tex), haveNIR(true)
+    MaterialMirror(const vec4& color = vec4(1.0f), const Texture* tex = nullptr) :
+        Material(nullptr), color(color), colorTex(tex), haveNIR(true)
     {
     }
 
-    MaterialMirror(const vec3& surfaceColor, const Texture* tex = nullptr) :
-        Material(nullptr), surfaceColor(surfaceColor, average(surfaceColor)), surfaceColorTex(tex), haveNIR(false)
+    MaterialMirror(const vec3& color, const Texture* tex = nullptr) :
+        Material(nullptr), color(color, average(color)), colorTex(tex), haveNIR(false)
     {
     }
 
@@ -55,7 +55,7 @@ public:
         if (hit.backside)
             return ScatterRecord(ScatterNone);
         vec3 reflected = reflect(ray.direction, normalAt(hit, ray.time));
-        vec4 att = surfaceColorTex ? surfaceColorTex->value(hit.texcoords, ray.time) : surfaceColor;
+        vec4 att = colorTex ? colorTex->value(hit.texcoords, ray.time) : color;
         if (!haveNIR)
             att.a() = average(att.rgb());
         return ScatterRecord(ScatterExplicit, normalize(reflected), att, ray.refractiveIndex);
@@ -69,11 +69,15 @@ public:
             const std::filesystem::path& basePath, const std::string& baseName,
             std::map<const SceneComponent*, std::string>& sceneExportCache) const override
     {
-        objMaterial.Ks = surfaceColor.rgb();
-        float r = 0.001; // roughness for GGX that comes close to mirror
+        objMaterial.Ks = color.rgb();
+        float r = 0.001f; // roughness for GGX that comes close to mirror
         objMaterial.Ns = 2.0f / (r * r * r * r) - 2.0f; // from http://graphicrants.blogspot.com/2013/08/specular-brdf-reference.html
-        if (surfaceColorTex)
-            objMaterial.map_Ks = surfaceColorTex->exportToObj(geometryOut, materialOut, globalVertexIndex, false, animationCache, basePath, baseName, sceneExportCache);
+        if (colorTex) {
+            objMaterial.map_Ks = colorTex->exportToObj(geometryOut, materialOut, globalVertexIndex, false, animationCache, basePath, baseName, sceneExportCache);
+        }
+        if (normalTex) {
+            objMaterial.norm = normalTex->exportToObj(geometryOut, materialOut, globalVertexIndex, false, animationCache, basePath, baseName, sceneExportCache);
+        }
     }
 };
 
