@@ -46,3 +46,7 @@ install(TARGETS test-camera-and-projection RUNTIME DESTINATION bin)
 add_executable(test-rgl test-rgl.cpp)
 target_link_libraries(test-rgl ${WURBLPT_LIBRARIES} ${TGD_LIBRARIES} OpenMP::OpenMP_CXX)
 install(TARGETS test-rgl RUNTIME DESTINATION bin)
+
+add_executable(test-discoball test-discoball.cpp)
+target_link_libraries(test-discoball ${WURBLPT_LIBRARIES} ${TGD_LIBRARIES} OpenMP::OpenMP_CXX)
+install(TARGETS test-discoball RUNTIME DESTINATION bin)
