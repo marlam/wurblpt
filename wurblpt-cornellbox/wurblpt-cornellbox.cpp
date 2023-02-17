@@ -35,8 +35,8 @@ class ObjectAnimation : public AnimationKeyframes
 {
 public:
     ObjectAnimation() : AnimationKeyframes(
-            0.0f, Transformation(vec3(0.0f, 0.3f, 0.0f)),
-            1.0f, Transformation(vec3(0.0f, 0.2f, 0.0f)))
+            0.0f, Transformation(vec3(0.33f, 0.6f, 0.37f), quat::null(), vec3(0.3f)),
+            1.0f, Transformation(vec3(0.33f, 0.5f, 0.37f), quat::null(), vec3(0.3f)))
     {
     }
 };
@@ -116,7 +116,11 @@ void createScene(Scene& scene,
         scene.take(new MeshInstance(soData, shortObjectMaterial, animIndex));
     } else if (shortObjectType == 1) {
 # if 1
-        scene.take(new Sphere(vec3(0.33f, 0.3f, 0.37f), 0.3f, shortObjectMaterial, animIndex));//, HotSpot);
+        if (animIndex >= 0) {
+            scene.take(new Sphere(shortObjectMaterial, animIndex));//, HotSpot);
+        } else {
+            scene.take(new Sphere(vec3(0.33f, 0.3f, 0.37f), 0.3f, shortObjectMaterial));//, HotSpot);
+        }
 # else
         Material* glass = scene.take(new MaterialGlass(vec3(0.0f), 1.5f));
         Transformation sphereTransformation(vec3(0.33f, 0.3f, 0.37f), quat::null(), vec3(0.3f));

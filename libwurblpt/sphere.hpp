@@ -41,13 +41,18 @@ private:
     const int _animationIndex;
 
 public:
-    Sphere(const Material* material, const Transformation& T, int animationIndex = -1) :
-        _material(material), _transformation(T), _animationIndex(animationIndex)
+    Sphere(const Material* material, const Transformation& T) :
+        _material(material), _transformation(T), _animationIndex(-1)
     {
     }
 
-    Sphere(const vec3& center, float radius, const Material* material, int animationIndex = -1) :
-        Sphere(material, Transformation(center, quat::null(), vec3(radius)), animationIndex)
+    Sphere(const Material* material, int animationIndex = -1) :
+        _material(material), _transformation(), _animationIndex(animationIndex)
+    {
+    }
+
+    Sphere(const vec3& center, float radius, const Material* material) :
+        Sphere(material, Transformation(center, quat::null(), vec3(radius)))
     {
     }
 

@@ -35,17 +35,6 @@
 
 using namespace WurblPT;
 
-class SphereAnimation : public Animation
-{
-public:
-    virtual Transformation at(float t) const override
-    {
-        Transformation T0(vec3(0.0f));
-        Transformation T1(vec3(0.3f, 0.0f, 0.0f));
-        return mix(T0, T1, t);
-    }
-};
-
 class SphereTexture final : public TexturePerlinNoise
 {
 private:
@@ -87,9 +76,16 @@ void createRandomScene(Scene& scene)
             vec3(2.0f, 1.5f, 0.1f));
     scene.take(new MeshInstance(scene.take(generateQuad(lightT)), light), HotSpot);
 
-    scene.take(new Sphere(vec3(4.0f, 4.0f, 2.0f), 0.5f,
-                scene.take(new MaterialLambertian(vec3(0.7f, 0.3f, 0.1f))),
-                scene.take(new SphereAnimation)));
+    AnimationKeyframes* anim = new AnimationKeyframes;
+    Transformation T0;
+    T0.translate(vec3(4.0f, 4.0f, 2.0f));
+    T0.scale(0.5f);
+    Transformation T1;
+    T1.translate(vec3(4.0f, 4.0f, 2.0f) + vec3(0.3f, 0.0f, 0.0f));
+    T1.scale(0.5f);
+    anim->addKeyframe(0.0f, T0);
+    anim->addKeyframe(1.0f, T1);
+    scene.take(new Sphere(scene.take(new MaterialLambertian(vec3(0.7f, 0.3f, 0.1f))), scene.take(anim)));
 
     scene.take(new Sphere(vec3(2.6f, 1.5f, 0.45f), 0.5f,
                 scene.take(new MaterialGlass(vec3(0.0f), 1.5f))));
