@@ -169,9 +169,8 @@ public:
     {
         fprintf(stderr, "Building bounding volume hierarchy for %zu hitables for %.3fs-%.3fs\n",
                 hitables.size(), animationCacheT0.t(), animationCacheT1.t());
-        BVHNode* rootNode = nullptr;
+        BVHNode* rootNode = new BVHNode;
         if (hitables.size() > 0) {
-            rootNode = new BVHNode;
             std::vector<AABB> aabbs(hitables.size());
             std::vector<unsigned int> subset(hitables.size());
             for (size_t i = 0; i < hitables.size(); i++) {
@@ -186,6 +185,9 @@ public:
             omp_set_max_active_levels(maxTreeDepth);
             rootNode->build(hitables, aabbs, subset, areas0, areas1, 0, subset.size());
             omp_set_max_active_levels(max_active_levels_bak);
+        } else {
+            rootNode->_aabb = AABB(vec3(0.0f), vec3(0.0f));
+            rootNode->_hitable = nullptr;
         }
         return rootNode;
     }
