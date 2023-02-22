@@ -43,3 +43,43 @@ For use on HPC clusters:
   Launch one MPI rank per node and let OpenMP use all the cores in the node.
   Make sure that MPI binding does not get in the way of OpenMP, e.g. by using
   `mpirun --bind-to none`.
+
+# Surround Video and 3D Video
+
+Use the AV1 codec if the target systems support hardware accelerated playback,
+otherwise fall back to H265. In both cases, use the mp4 container format.
+Examples for high quality encoding:
+```
+ffmpeg -i input-%04d-360.png -vf format=yuv420p -c:v libaom-av1 -crf 30 -g 125 output-360.mp4
+ffmpeg -i input-%04d-360.png -vf format=yuv420p -c:v libx265 -preset veryslow -crf 20 output-360.mp4
+```
+
+For 360° video, set the appropriate metadata
+[defined by Google](https://github.com/google/spatial-media/blob/master/docs/spherical-video-rfc.md)
+and understood by [VLC](https://www.videolan.org/vlc/).
+Note that [Bino](https://bino3d.org) does not yet support this metadata because
+of QtMultimedia limitations; that's why it uses file name conventions.
+```
+exiftool \
+	-XMP-GSpherical:Spherical="true" \
+	-XMP-GSpherical:Stitched="true" \
+	-XMP-GSpherical:StitchingSoftware="WurblPT" \
+	-XMP-GSpherical:ProjectionType="equirectangular" \
+	output-360.mp4
+```
+In the case of stereoscopic 360 video, add `-XMP-GSpherical:StereoMode="top-bottom"`.
+
+WurblPT includes tools that can
+- extract 180° video from 360° video (both 3D and 2D),
+- extract the left view from a 3D input to create a 2D output (works fine for conventional video,
+  but for surround video this is not what you might expect because of the moving eye centers
+  when rendering 3D surround), and
+- render 2D views from 360° video (the same way that [Bino](https://bino3d.org) or
+  [VLC](https://www.videolan.org/vlc/) do).
+If you want to create all combinations, do the following:
+- Render 360° 3D, and extract 180° 3D from it.
+- Render 360° 2D, and extract 180° 2D from it.
+  Do not extract one view from the 360° 3D to get 2D because this is not strictly the same.
+- To get highest quality conventional video, render conventional 3D, and extract the left view to get conventional 2D.
+- Alternatively, render conventional 3D from 360° and conventional 2D from 360° 2D, both
+  with half the resolution of the 360° video (more does not make sense since details vanish).
