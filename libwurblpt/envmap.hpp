@@ -212,11 +212,19 @@ public:
 
 class EnvironmentMapEquiRect final : public EnvironmentMap
 {
+public:
+    enum Compatibility {
+        CompatibilityMitsuba,
+        CompatibilitySurroundVideo
+    };
+
 private:
+    const Compatibility _compatibility;
     const Texture* _tex;
 
 public:
-    EnvironmentMapEquiRect(const Texture* tex) : _tex(tex)
+    EnvironmentMapEquiRect(const Texture* tex, Compatibility compat = CompatibilityMitsuba) :
+        _compatibility(compat), _tex(tex)
     {
     }
 
@@ -224,10 +232,15 @@ public:
     {
         float y = asin(clamp(direction.y(), -1.0f, 1.0f));
         float x = atan(-direction.x(), direction.z());
-        /* adjust x to be compatible to Mitsuba */
-        x -= pi;
-        if (x < 0.0f)
-            x += 2.0f * pi;
+        switch (_compatibility) {
+        case CompatibilityMitsuba:
+            x -= pi;
+            if (x < 0.0f)
+                x += 2.0f * pi;
+            break;
+        case CompatibilitySurroundVideo:
+            break;
+        }
         x *= 0.5f * inv_pi;
         y = y * inv_pi + 0.5f;
         return _tex->value(vec2(x, y), t);
