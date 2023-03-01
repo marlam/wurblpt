@@ -1,6 +1,6 @@
-# wurblpt
+# WurblPT
 
-Wurblpt is an experimental path tracer with the following features:
+WurblPT is an experimental path tracer with the following features:
 - Camera modes for surround images (360° and 180°) and stereoscopic 3D
 - Camera intrinsics and lens distortion compatible to OpenCV
 - Support for RGB sensors and Time-of-Flight distance sensors
@@ -9,7 +9,7 @@ Wurblpt is an experimental path tracer with the following features:
 - Light travel distances for each path for precise simulation of
   Time-of-Flight sensors
 - Support for rendering on HPC clusters (pure OpenMP or mixed MPI/OpenMP)
-- Support for measured materials from the RGL material database
+- Support for measured materials from the [RGL material database](https://rgl.epfl.ch/materials)
 - Import of OBJ/MTL scenes
 - Export to OBJ/MTL including snapshots of animated scenes and procedural
   textures
@@ -18,7 +18,7 @@ Wurblpt is an experimental path tracer with the following features:
 # Requirements
 
 Only [libtgd](https://marlam.de/tgd/) is required, nothing else. Furthermore,
-for use in wurblpt, libtgd does not need any external libraries.
+for use in WurblPT, libtgd does not need any external libraries.
 
 
 # Usage
@@ -72,11 +72,13 @@ In the case of stereoscopic 360 video, add `-XMP-GSpherical:StereoMode="top-bott
 WurblPT includes tools that can
 - extract 180° video from 360° video (both 3D and 2D),
 - extract the left view from a 3D input to create a 2D output (works fine for conventional video,
-  but for surround video this is not what you might expect because of the moving eye centers
-  when rendering 3D surround), and
+  but for surround video this is not what you might expect because of the
+  [moving eye centers when rendering 3D surround](https://developers.google.com/static/vr/jump/rendering-ods-content.pdf)),
+  and
 - render 2D views from 360° video (the same way that [Bino](https://bino3d.org) or
   [VLC](https://www.videolan.org/vlc/) do).
-If you want to create all combinations, do the following:
+
+If you want to create all combinations with minimal computational costs, do the following:
 - Render 360° 3D, and extract 180° 3D from it.
 - Render 360° 2D, and extract 180° 2D from it.
   Do not extract one view from the 360° 3D to get 2D because this is not strictly the same.
