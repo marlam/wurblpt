@@ -339,7 +339,7 @@ int main(int argc, char* argv[])
         break;
     }
     Parameters params;
-    params.maxPathComponents = 6;
+    //params.maxPathComponents = 6; // this gives ca 50% performance improvements, but the effect is visible
 
     Scene scene;
     createScene(scene);
