@@ -44,7 +44,8 @@ For use on HPC clusters:
   Make sure that MPI binding does not get in the way of OpenMP, e.g. by using
   `mpirun --bind-to none`.
 
-# Surround Video and 3D Video
+
+# Video Encoding and Metadata
 
 Use the AV1 codec if the target systems support hardware accelerated playback,
 otherwise fall back to H265. In both cases, use the mp4 container format.
@@ -57,8 +58,6 @@ ffmpeg -i input-%04d-360.png -vf format=yuv420p -c:v libx265 -preset veryslow -c
 For 360° video, set the appropriate metadata
 [defined by Google](https://github.com/google/spatial-media/blob/master/docs/spherical-video-rfc.md)
 and understood by [VLC](https://www.videolan.org/vlc/).
-Note that [Bino](https://bino3d.org) does not yet support this metadata because
-of QtMultimedia limitations; that's why it uses file name conventions.
 ```
 exiftool \
 	-XMP-GSpherical:Spherical="true" \
@@ -67,21 +66,45 @@ exiftool \
 	-XMP-GSpherical:ProjectionType="equirectangular" \
 	output-360.mp4
 ```
-In the case of stereoscopic 360 video, add `-XMP-GSpherical:StereoMode="top-bottom"`.
+In the case of stereoscopic 360° video, add `-XMP-GSpherical:StereoMode="top-bottom"`.
+
+Note that [Bino](https://bino3d.org) does not yet support this metadata because
+of QtMultimedia limitations; that's why it uses [file name conventions](https://bino3d.org/bino-manual.html#file-name-conventions).
+
+With WurblPT, append the following marker to the file name just before the extension so that Bino detects the correct format:
+- Conventional 2D: no marker; example: `image.png`
+- Conventional 3D: marker `-tb`; example: `image-tb.png`
+- 180° 2D: marker `-180`; example: `image-180.png`
+- 180° 3D: marker `-180-tb`; example: `image-180-tb.png`
+- 360° 2D: marker `-360`; example: `image-360.png`
+- 360° 3D: marker `-360-tb`; example: `image-360-tb.png`
+
+
+# Creating and Converting Conventional and Surround Output
 
 WurblPT includes tools that can
-- extract 180° video from 360° video (both 3D and 2D),
-- extract the left view from a 3D input to create a 2D output (works fine for conventional video,
-  but for surround video this is not what you might expect because of the
-  [moving eye centers when rendering 3D surround](https://developers.google.com/static/vr/jump/rendering-ods-content.pdf)),
-  and
-- render 2D views from 360° video (the same way that [Bino](https://bino3d.org) or
-  [VLC](https://www.videolan.org/vlc/) do).
+- extract 180° output from 360° input, both 3D and 2D (`wurblpt-360-to-180`)
+- extract the left view from a 3D input to create a 2D output (`wurblpt-stereo-to-mono`)
+- render 2D views from 360° input (`wurblpt-360-to-conventional`)
 
-If you want to create all combinations with minimal computational costs, do the following:
-- Render 360° 3D, and extract 180° 3D from it.
-- Render 360° 2D, and extract 180° 2D from it.
-  Do not extract one view from the 360° 3D to get 2D because this is not strictly the same.
-- To get highest quality conventional video, render conventional 3D, and extract the left view to get conventional 2D.
-- Alternatively, render conventional 3D from 360° and conventional 2D from 360° 2D, both
-  with half the resolution of the 360° video (more does not make sense since details vanish).
+If you want to create all six forms (conventional, 180°, 360°, each in 2D and 3D) with minimal computational costs, do the following:
+- Render 360° 3D, and extract 180° 3D from it with `wurblpt-360-to-180`.
+  This is exactly what you would get when rendering 180° 3D directly.
+- Render 360° 2D, and extract 180° 2D from it with `wurblpt-360-to-180`.
+  This is exactly what you would get when rendering 180° 2D directly.
+- Render conventional 3D, and extract conventional 2D from it with `wurblpt-stereo-to-mono`.
+  This is almost exactly what you would get when rendering conventional 2D
+  directly, but the 2D camera will be positioned at the left eye and not at the
+  center between the eyes, which is a difference of half the stereoscopic eye
+  distance, typically 3.5cm, which should not be noticable for most scenes.
+
+Notes:
+- You can extract one view from 360° 3D to get 360° 2D with `wurblpt-stereo-to-mono`,
+  but the result is typically not what you want due to
+  [moving eye centers when rendering 360° 3D](https://developers.google.com/static/vr/jump/rendering-ods-content.pdf).
+- If you have 360° (either 2D or 3D), you can get conventional 2D or 3D cheaply
+  with `wurblpt-360-to-conventional`. This renders the conventional view in the same
+  way a surround video player such as [Bino](https://bino3d.org) or
+  [VLC](https://www.videolan.org/vlc/) does.
+  However the output should not have more than half the resolution of the
+  360° input; more does not make sense since details vanish.
