@@ -229,6 +229,7 @@ public:
             unsigned int /* pathComponent */,
             float /* geometricPathLength */,
             const vec4& opticalPathLength,
+            float /* distanceToLight */,
             const vec4& radiance,
             const HitRecord& hitRecord,
             float /* t0 */, float /* t1 */,

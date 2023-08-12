@@ -53,8 +53,9 @@ public:
     virtual void accumulateRadiance(
             const Ray& /* r */,
             unsigned int /* pathComponent */,
-            float /* geometricPathLength */,            // might be 0 if unknown, e.g. for environment map
-            const vec4& /* opticalPathLength */,        // might be 0 if unknown, e.g. for environment map
+            float /* geometricPathLength */,            // FLT_MAX for environment map
+            const vec4& /* opticalPathLength */,        // FLT_MAX for environment map
+            float /* distanceToLight */,                // FLT_MAX for environment map
             const vec4& /* radiance */,
             const HitRecord& /* hitRecord */,           // hitRecord.haveHit might be false, e.g. for an env map
             float /* t0 */, float /* t1 */,

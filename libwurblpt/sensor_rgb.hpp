@@ -34,10 +34,13 @@ class SensorRGB final : public Sensor
 {
 private:
     TGD::Array<float> _frame;
+    const float _minDistToLight, _maxDistToLight;
 
 public:
-    SensorRGB(unsigned int width, unsigned int height) :
-        _frame({ width, height }, 3)
+    SensorRGB(unsigned int width, unsigned int height,
+            float minDistToLight = 0.0f, float maxDistToLight = std::numeric_limits<float>::max()) :
+        _frame({ width, height }, 3),
+        _minDistToLight(minDistToLight), _maxDistToLight(maxDistToLight)
     {
         _frame.componentTagList(0).set("INTERPRETATION", "RED");
         _frame.componentTagList(1).set("INTERPRETATION", "GREEN");
@@ -59,14 +62,17 @@ public:
             unsigned int /* pathComponent */,
             float /* geometricPathLength */,
             const vec4& /* opticalPathLength */,
+            float distanceToLight,
             const vec4& radiance,
             const HitRecord& /* hitRecord */,
             float /* t0 */, float /* t1 */,
             float* sampleAccumulator) const override
     {
-        sampleAccumulator[0] += radiance.r();
-        sampleAccumulator[1] += radiance.g();
-        sampleAccumulator[2] += radiance.b();
+        for (int i = 0; i < 3; i++) {
+            if (distanceToLight >= _minDistToLight && distanceToLight <= _maxDistToLight) {
+                sampleAccumulator[i] += radiance[i];
+            }
+        }
     }
 
     virtual void finishPixel(unsigned int pixelIndex, float invSamples, const float* sampleAccumulator) override

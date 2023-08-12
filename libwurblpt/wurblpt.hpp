@@ -136,7 +136,10 @@ inline void tracePath(
         if (!hr.haveHit) {
             if (scene.environmentMap()) {
                 radianceToAccumulate = attenuation * scene.environmentMap()->L(ray.direction, ray.time);
-                sensor.accumulateRadiance(ray, pathComponent, 0.0f, vec4(0.0f),
+                sensor.accumulateRadiance(ray, pathComponent,
+                        std::numeric_limits<float>::max(),
+                        vec4(std::numeric_limits<float>::max()),
+                        std::numeric_limits<float>::max(),
                         radianceToAccumulate, hr, t0, t1, sampleAccumulator);
             }
             break;
@@ -156,6 +159,7 @@ inline void tracePath(
         // Accumulated emitted radiance
         radianceToAccumulate = attenuation * hr.hitable->material()->emitted(ray, hr);
         sensor.accumulateRadiance(ray, pathComponent, pathLength, opticalPathLength,
+                (pathComponent == 0 ? 0.0f : hr.a),
                 radianceToAccumulate, hr, t0, t1, sampleAccumulator);
 
         // Stop if there is no further scattering
@@ -208,7 +212,8 @@ inline void tracePath(
                         float pathLengthToAccumulate = pathLength + directHR.a;
                         vec4 opticalPathLengthToAccumulate = opticalPathLength + directHR.a * directRay.refractiveIndex;
                         sensor.accumulateRadiance(ray, pathComponent + 1,
-                                pathLengthToAccumulate, opticalPathLengthToAccumulate, radianceToAccumulate,
+                                pathLengthToAccumulate, opticalPathLengthToAccumulate,
+                                directHR.a, radianceToAccumulate,
                                 directHR, t0, t1, sampleAccumulator);
                     }
                 }
@@ -237,7 +242,10 @@ inline void tracePath(
                     float weight = powerHeuristicWeight(lightDirP, lightSR.pdf);
                     radianceToAccumulate = attenuation * lightSR.attenuation / lightDirP * weight
                         * scene.environmentMap()->L(lightDir);
-                    sensor.accumulateRadiance(ray, pathComponent + 1, 0.0f, vec4(0.0f),
+                    sensor.accumulateRadiance(ray, pathComponent + 1,
+                            std::numeric_limits<float>::max(),
+                            vec4(std::numeric_limits<float>::max()),
+                            std::numeric_limits<float>::max(),
                             radianceToAccumulate, lightHR, t0, t1, sampleAccumulator);
                 }
             }
