@@ -115,28 +115,66 @@ void createRandomScene(Scene& scene)
     }
 }
 
-int main(void)
+int main(int argc, char* argv[])
 {
-    bool preview = true;
+    /* Three configurations:
+     * configuration==0: default; just render the standard image
+     * configuration==1: light in flight, progressive
+     * configuration==2: light in flight, cumulative
+     * Configurations 1 and 2 result in a series of images / video
+     * for which you can render either just one frame or all of them.
+     */
+
+    if (argc != 1 && argc != 2 && argc != 3) {
+        fprintf(stderr, "Usage: %s [configuration] [frame]\n", argv[0]);
+        return 1;
+    }
+    int configuration = (argc >= 2 ? atoi(argv[1]) : 0);
+    int frameno = (argc >= 3 ? atoi(argv[2]) : -1);
+
+    bool preview = false;
     unsigned int width        = 500;
     unsigned int height       = 500;
     unsigned int samples_sqrt = (preview ? 20 : 70);
     float t0 = 0.0f;
-    float t1 = 1.0f;
+    float t1 = (configuration == 0 ? 1.0f : 0.0f);
 
     Scene scene;
     createRandomScene(scene);
+    scene.updateBVH(t0, t1);
 
-    SensorRGB sensor(width, height);
-    Optics optics(Projection(radians(40.0f), sensor.aspectRatio()),
+    Optics optics(Projection(radians(40.0f), float(width) / height),
             LensDistortion(), LensDepthOfField(0.0f, 0.1f));
-
     Transformation cameraT(vec3(7.5f, 1.5f, -6.0f), toQuat(radians(vec3(10.0f, 150.0f, 0.0f))));
     Camera camera(optics, cameraT);
 
-    scene.updateBVH(t0, t1);
-    mcpt(sensor, camera, scene, samples_sqrt, t0, t1);
-    TGD::save(toSRGB(sensor.result()), "image.png");
+    float distanceToLightStartFirst = -0.25f;
+    float distanceToLightStartLast = 14.0f;
+    float distanceToLightWidth = 0.25f;
+    int frameCount = (configuration == 0 ? 1 : 200);
+
+    float distanceToLightStartStep = (distanceToLightStartLast - distanceToLightStartFirst) / frameCount;
+    for (int frame = 0; frame < frameCount; frame++) {
+        if (frameno >= 0 && frame != frameno)
+            continue;
+
+        std::string filename = "rttnw";
+        if (configuration > 0) {
+            char frameString[32] = "";
+            snprintf(frameString, sizeof(frameString), "-%s-%04d",
+                    configuration == 1 ? "progressive" : "cumulative",
+                    frame);
+            filename += frameString;
+        }
+        filename += ".png";
+
+        float distanceToLightMin = distanceToLightStartFirst + frame * distanceToLightStartStep;
+        SensorRGB sensor(width, height,
+                (configuration == 1 ? distanceToLightMin : 0.0f),
+                (configuration > 0 ? distanceToLightMin + distanceToLightWidth : std::numeric_limits<float>::max()));
+        mcpt(sensor, camera, scene, samples_sqrt, t0, t1);
+        TGD::save(toSRGB(sensor.result()), filename);
+    }
 
     return 0;
 }
