@@ -47,12 +47,9 @@ For use on HPC clusters:
 
 # Video Encoding and Metadata
 
-Use the AV1 codec if the target systems support hardware accelerated playback,
-otherwise fall back to H265. In both cases, use the mp4 container format.
-Examples for high quality encoding:
+Use the AV1 codec with the mp4 container format. Example for high quality encoding:
 ```
 ffmpeg -i input-%04d-360.png -vf format=yuv420p -c:v libaom-av1 -crf 30 -g 125 output-360.mp4
-ffmpeg -i input-%04d-360.png -vf format=yuv420p -c:v libx265 -preset veryslow -crf 20 output-360.mp4
 ```
 
 For 360° video, set the appropriate metadata
