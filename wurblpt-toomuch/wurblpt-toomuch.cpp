@@ -122,30 +122,30 @@ public:
 void createScene(Scene& scene, const Parameters& params)
 {
     Transformation boxTransformation(vec3(0.0f, 4.0f, 0.0f), quat::null(), vec3(4.0f));
-    Material* boxFloorMaterial = scene.take(new MaterialLambertian(vec3(0.8f)));
+    Material* boxFloorMaterial = scene.take(new MaterialLambertian(vec3(0.4f)));
     Material* boxFloorMaterial2 = scene.take(new MaterialTwoSided(boxFloorMaterial, boxFloorMaterial));
-    Material* boxWallMaterial = scene.take(new MaterialLambertian(vec3(0.8f)));
+    Material* boxWallMaterial = scene.take(new MaterialLambertian(vec3(0.4f)));
     Material* boxWallMaterial2 = scene.take(new MaterialTwoSided(boxWallMaterial, boxWallMaterial));
     scene.take(new MeshInstance(scene.take(generateCubeSide(3, boxTransformation)), boxFloorMaterial2));
     for (int side = 0; side < 6; side++)
         if (side != 3)
             scene.take(new MeshInstance(scene.take(generateCubeSide(side, boxTransformation)), boxWallMaterial2));
 
-    Material* sphereMaterial = scene.take(new MaterialGGX(vec3(1.0f), vec2(0.001f)));
+    Material* sphereMaterial = scene.take(new MaterialMirror());// MaterialGGX(vec3(1.0f), vec2(0.001f)));
     scene.take(new Sphere(vec3(0.0f, 0.6f, 0.0f), 0.6f, sphereMaterial), HotSpot);
 
     Material* lightBacksideMaterial = scene.take(new MaterialLambertian(vec3(0.2f)));
     for (int i = 0; i < 5; i++) {
         int lightAnimationIndex = scene.take(new LightAnimation(i));
         Texture* lightTexture = scene.take(new LightTexture(i));
-        Material* lightMaterial = scene.take(new LightDiffuse(vec3(10.0f), lightTexture));
+        Material* lightMaterial = scene.take(new LightDiffuse(vec3(1.0f), lightTexture));
         scene.take(new MeshInstance(scene.take(generateCubeSide(4)), lightMaterial, lightAnimationIndex), HotSpot);
         scene.take(new MeshInstance(scene.take(generateCubeSide(5)), lightMaterial, lightAnimationIndex), HotSpot);
         for (int side = 0; side < 4; side++)
             scene.take(new MeshInstance(scene.take(generateCubeSide(side)), lightBacksideMaterial, lightAnimationIndex));
     }
 
-    Material* pillarMaterial = scene.take(new MaterialGlass(vec3(0.0f), 1.5f));
+    Material* pillarMaterial = scene.take(new MaterialLambertian(vec3(0.5f)));// scene.take(new MaterialGlass(vec3(0.0f), 1.5f));
     for (int i = 0; i < 5; i++) {
         // pillars
         Transformation pillarTransformation;
@@ -157,7 +157,7 @@ void createScene(Scene& scene, const Parameters& params)
         // objects
         Transformation objectTransformation; // handled by animation
         int objectAnimationIndex = scene.take(new ObjectAnimation(i));
-        Material* objectMaterial = scene.take(new MaterialModPhong(vec3(0.7f), vec3(0.3f), 100.0f));
+        Material* objectMaterial = scene.take(new MaterialModPhong(vec3(0.5f), vec3(0.5f), 120.0f));
         scene.take(new MeshInstance(scene.take(
                     (i == 0 ? generateCube(objectTransformation)
                      : i == 1 ? generateClosedCone(objectTransformation)
@@ -209,7 +209,7 @@ int main(int argc, char* argv[])
         const TGD::Array<float>& hdrImg = sensor.result();
 
         TGD::save(hdrImg, std::string("toomuch-") + frameString + ".tgd");
-        TGD::save(toSRGB(hdrImg), std::string("toomuch-") + frameString + ".png");
+        TGD::save(toSRGB(uniformRationalQuantization(hdrImg, 1.0f, 8.0f)), std::string("toomuch-") + frameString + ".png");
     }
 
     return 0;
