@@ -134,7 +134,7 @@ void createScene(Scene& scene)
     Texture* cylinderNrmTex = scene.take(createTextureImage("brick_wall_001_nor_gl_1k.jpg", LinearizeSRGB_Off));
     MaterialModPhong* cylinderMaterial = new MaterialModPhong(
             vec3(0.5f, 0.5f, 0.3f), cylinderDifTex, vec3(0.5f, 0.5f, 0.3f), cylinderSpcTex, 1000.0f);
-    cylinderMaterial->normalTex = scene.take(cylinderNrmTex);
+    cylinderMaterial->normalTex = cylinderNrmTex;
     scene.take(cylinderMaterial);
 
     Mesh* cylinderData = scene.take(generateClosedCylinder());
