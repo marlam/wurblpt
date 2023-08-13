@@ -145,7 +145,7 @@ void createScene(Scene& scene, const Parameters& params)
             scene.take(new MeshInstance(scene.take(generateCubeSide(side)), lightBacksideMaterial, lightAnimationIndex));
     }
 
-    Material* pillarMaterial = scene.take(new MaterialLambertian(vec3(0.5f)));// scene.take(new MaterialGlass(vec3(0.0f), 1.5f));
+    Material* pillarMaterial = scene.take(new MaterialGlass(vec3(0.0f), 1.5f));
     for (int i = 0; i < 5; i++) {
         // pillars
         Transformation pillarTransformation;
