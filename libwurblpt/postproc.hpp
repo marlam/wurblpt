@@ -81,9 +81,9 @@ inline TGD::Array<float> uniformRationalQuantization(const TGD::Array<float>& im
     for (size_t i = 0; i < r.elementCount(); i++) {
         vec3 rgb = vec3(img[i]);
         vec3 xyz = rgb_to_xyz(rgb);
-        float old_y = xyz.y();
+        float old_y = xyz.y() / 100.0f;
         float new_y = brightness * old_y / ((brightness - 1.0f) * old_y + maxVal);
-        xyz = adjust_y(xyz, 100.0f * new_y);
+        xyz = adjust_y(xyz, new_y * 100.0f);
         rgb = xyz_to_rgb(xyz);
         r.set(i, { rgb.r(), rgb.g(), rgb.b() });
     }

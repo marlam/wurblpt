@@ -159,7 +159,7 @@ int main(int argc, char* argv[])
     mcpt(sensor, camera, scene, samples_sqrt, 0.0f, 0.0f, parameters);
 
     const TGD::Array<float>& hdrImg = sensor.result();
-    TGD::Array<float> ldrImg = uniformRationalQuantization(hdrImg, maxLuminance(hdrImg), 16.0f);
+    TGD::Array<float> ldrImg = uniformRationalQuantization(hdrImg, 1.0f, 16.0f);
     TGD::Array<uint8_t> srgbImg = toSRGB(ldrImg);
 
     TGD::save(hdrImg, "image" + marker + ".exr");

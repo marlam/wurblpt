@@ -198,7 +198,7 @@ int main(void)
         float t1 = t0;
         scene.updateBVH(t0, t1);
         mcpt(sensor, camera, scene, samples_sqrt, t0, t1);
-        const float maxLum = 9000.0f;
+        const float maxLum = 50.0f;
         TGD::Array<float> ldrImg = uniformRationalQuantization(sensor.result(), maxLum, 8.0f);
         TGD::Array<uint8_t> srgbImg = toSRGB(ldrImg);
         char buf[16];
