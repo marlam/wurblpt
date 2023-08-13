@@ -23,9 +23,6 @@
  * SOFTWARE.
  */
 
-/* The normal map is from
- * https://polyhaven.com/a/aerial_beach_01
- * License CC0 */
 
 #include <tgd/array.hpp>
 #include <tgd/io.hpp>
@@ -34,6 +31,57 @@
 
 using namespace WurblPT;
 
+/* Conversion of sphere texture coordinates to equal-area map coordinates
+ * so that we can apply e.g. bump maps without getting unsightly artifacts
+ * in the polar regions.
+ * The idea is to map a hemisphere to a circle in an area-preserving way,
+ * to get good sampling quality over the hemisphere, and then to map both
+ * hemispheres onto the same map, so that the generated maps are consistent
+ * at their shared border (at the cost of having identical maps for north
+ * and south hemisphere). */
+vec2 mapSphere(const vec2& tc)
+{
+    // recover latitude and longitude from sphere texture coordinates
+    float lat = (fract(tc.y()) - 0.5f) * pi;     // in [-pi/2,pi/2]
+    float lon = fract(tc.x()) * 2.0f * pi - pi;  // in [-pi,pi]
+    // map northern and southern hemisphere onto the same disk
+    lat = abs(lat);
+    // map from hemisphere to disk using Lambert Equal Area projection
+    float r = sqrt2 * sin(0.5f * (pi_2 - lat));
+    float alpha = lon - pi_2;
+    // compute cartesian coordinates in map, in [0,1]^2
+    vec2 uv = r * vec2(cos(alpha), sin(alpha));
+    return 0.5f * (uv + vec2(1.0f));
+}
+
+/* A normal map based on gradient noise */
+class BumpyNormalMap final : public Texture
+{
+private:
+    constexpr static int baseSize = 16;
+    TextureGradientNoise baseNoiseTex;
+
+public:
+    BumpyNormalMap(Prng& prng) :
+        baseNoiseTex(baseSize, baseSize, prng)
+    {
+    }
+
+    vec4 value(const vec2& texcoord, float t) const override
+    {
+        vec2 tc = mapSphere(texcoord);
+        const float offset = 1.0f / baseSize;
+        const float bumpScaling = 1.0f;
+        float heightR = baseNoiseTex.value(tc + vec2(+offset, 0.0f), t).r();
+        float heightL = baseNoiseTex.value(tc + vec2(-offset, 0.0f), t).r();
+        float heightT = baseNoiseTex.value(tc + vec2(0.0f, +offset), t).r();
+        float heightB = baseNoiseTex.value(tc + vec2(0.0f, -offset), t).r();
+        vec3 tx = vec3(2.0, 0.0, bumpScaling * (heightR - heightL));
+        vec3 ty = vec3(0.0, 2.0, bumpScaling * (heightT - heightB));
+        vec3 n = normalize(cross(tx, ty));
+        return vec4(0.5f * (n + vec3(1.0f)), 1.0f);
+    }
+};
 
 void createScene(Scene& scene, bool withHotSpots)
 {
@@ -75,9 +123,8 @@ void createScene(Scene& scene, bool withHotSpots)
     Material* mat0 = scene.take(new MaterialModPhong(vec3(0.5f), vec3(0.5f), 120.0f));
     Material* mat1 = scene.take(new MaterialPhaseFunctionIsotropic(vec3(1.0f)));
     Material* mat2 = scene.take(new MaterialGlass(MaterialGlass::transparentColorToAbsorption(vec3(1.0f)), 1.5f));
-    Texture* normalTex = scene.take(createTextureImage("aerial_beach_01_nor_gl_2k.jpg", LinearizeSRGB_Off));
-    Texture* sphereNormalTex = scene.take(new TextureTransformer(normalTex, vec2(6.0f, 3.0f)));
-    mat2->normalTex = sphereNormalTex;
+    Prng prng(31415926);
+    mat2->normalTex = scene.take(new BumpyNormalMap(prng));
     Material* mat3 = scene.take(new MaterialGGX(vec3(1.0f), vec2(0.01f, 0.1f)));
 
     quat rot = toQuat(radians(0.0f), vec3(0.0f, 1.0f, 0.0f));
