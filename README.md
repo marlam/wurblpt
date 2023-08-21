@@ -49,8 +49,13 @@ For use on HPC clusters:
 
 Use the AV1 codec with the mp4 container format. Example for high quality encoding:
 ```
-ffmpeg -i input-%04d-360.png -vf format=yuv420p -c:v libaom-av1 -crf 30 -g 125 output-360.mp4
+ffmpeg -i input-%04d-360.png -vf format=yuv420p -c:v libaom-av1 -row-mt 1 -tile-columns 3 -tile-rows 2 -threads 64 -crf 23 -g 50 output-360.mp4
 ```
+This sets visually lossless quality with `-crf 23` (lower values mean better
+quality) and a keyframe at every 50 frames with `-g 50`. The option `-row-mt 1`
+enables multithreading, `-threads 64` sets the maximum number of threads, and
+`-tile-columns 3 -tile-rows 2` results in 2^3 x 2^2 = 8x4 tiles for faster
+multithreaded encoding and decoding.
 
 For 360° video, set the appropriate metadata
 [defined by Google](https://github.com/google/spatial-media/blob/master/docs/spherical-video-rfc.md)
