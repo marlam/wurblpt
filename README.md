@@ -2,12 +2,12 @@
 
 WurblPT is an experimental path tracer with the following features:
 - Camera modes for surround images (360° and 180°) and stereoscopic 3D
+- Light travel distances for each path for light-in-flight rendering and
+  precise simulation of Time-of-Flight sensors
 - Camera intrinsics and lens distortion compatible to OpenCV
 - Support for RGB sensors and Time-of-Flight distance sensors
 - Animation of everything in the scene (geometry, textures, cameras, ...)
 - Ground Truth generation including geometry, materials, optical flow
-- Light travel distances for each path for precise simulation of
-  Time-of-Flight sensors
 - Support for rendering on HPC clusters (pure OpenMP or mixed MPI/OpenMP)
 - Support for measured materials from the [RGL material database](https://rgl.epfl.ch/materials)
 - Import of OBJ/MTL scenes
