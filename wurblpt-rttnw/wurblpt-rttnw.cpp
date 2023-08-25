@@ -119,11 +119,20 @@ int main(int argc, char* argv[])
 {
     /* Three configurations:
      * configuration==0: default; just render the standard image
-     * configuration==1: light in flight, progressive
-     * configuration==2: light in flight, cumulative
-     * Configurations 1 and 2 result in a series of images / video
+     * configuration==1: light in flight, progressive, visualization
+     * configuration==2: light in flight, cumulative, visualization
+     * configuration==3: light in flight, progressive, as it reaches camera
+     * configuration==4: light in flight, cumulative, as it reaches camera
+     * Configurations 1,2,3,4 result in a series of images / video
      * for which you can render either just one frame or all of them.
      */
+    const char* configurationName[5] = {
+        "default",
+        "light-in-flight-visualization-progressive",
+        "light-in-flight-visualization-cumulative",
+        "light-in-flight-camera-view-progressive",
+        "light-in-flight-camera-view-cumulative"
+    };
 
     if (argc != 1 && argc != 2 && argc != 3) {
         fprintf(stderr, "Usage: %s [configuration] [frame]\n", argv[0]);
@@ -151,27 +160,60 @@ int main(int argc, char* argv[])
     float distanceToLightStartFirst = -0.25f;
     float distanceToLightStartLast = 14.0f;
     float distanceToLightWidth = 0.25f;
+    float pathLenStartFirst = 8.4f;
+    float pathLenStartLast = 27.4f;
+    float pathLenWidth = 0.25f;
     int frameCount = (configuration == 0 ? 1 : 200);
 
     float distanceToLightStartStep = (distanceToLightStartLast - distanceToLightStartFirst) / frameCount;
+    float pathLenStartStep = (pathLenStartLast - pathLenStartFirst) / frameCount;
     for (int frame = 0; frame < frameCount; frame++) {
         if (frameno >= 0 && frame != frameno)
             continue;
 
         std::string filename = "rttnw";
         if (configuration > 0) {
-            char frameString[32] = "";
+            char frameString[64] = "";
             snprintf(frameString, sizeof(frameString), "-%s-%04d",
-                    configuration == 1 ? "progressive" : "cumulative",
+                    configurationName[configuration],
                     frame);
             filename += frameString;
         }
         filename += ".png";
 
         float distanceToLightMin = distanceToLightStartFirst + frame * distanceToLightStartStep;
-        SensorRGB sensor(width, height,
-                (configuration == 1 ? distanceToLightMin : 0.0f),
-                (configuration > 0 ? distanceToLightMin + distanceToLightWidth : std::numeric_limits<float>::max()));
+        float distanceToLightMax = distanceToLightMin + distanceToLightWidth;
+        float pathLenMin = pathLenStartFirst + frame * pathLenStartStep;
+        float pathLenMax = pathLenMin + pathLenWidth;
+        switch (configuration)
+        {
+        case 0:
+            distanceToLightMin = 0.0f;
+            distanceToLightMax = std::numeric_limits<float>::max();
+            pathLenMin = 0.0f;
+            pathLenMax = std::numeric_limits<float>::max();
+            break;
+        case 1:
+            pathLenMin = 0.0f;
+            pathLenMax = std::numeric_limits<float>::max();
+            break;
+        case 2:
+            distanceToLightMin = 0.0f;
+            pathLenMin = 0.0f;
+            pathLenMax = std::numeric_limits<float>::max();
+            break;
+        case 3:
+            distanceToLightMin = 0.0f;
+            distanceToLightMax = std::numeric_limits<float>::max();
+            break;
+        case 4:
+            pathLenMin = 0.0f;
+            distanceToLightMin = 0.0f;
+            distanceToLightMax = std::numeric_limits<float>::max();
+            break;
+        }
+        SensorRGB sensor(width, height, distanceToLightMin, distanceToLightMax, pathLenMin, pathLenMax);
+
         mcpt(sensor, camera, scene, samples_sqrt, t0, t1);
         TGD::save(toSRGB(sensor.result()), filename);
     }

@@ -35,12 +35,15 @@ class SensorRGB final : public Sensor
 private:
     TGD::Array<float> _frame;
     const float _minDistToLight, _maxDistToLight;
+    const float _minPathLen, _maxPathLen;
 
 public:
     SensorRGB(unsigned int width, unsigned int height,
-            float minDistToLight = 0.0f, float maxDistToLight = std::numeric_limits<float>::max()) :
+            float minDistToLight = 0.0f, float maxDistToLight = std::numeric_limits<float>::max(),
+            float minPathLen = 0.0f, float maxPathLen = std::numeric_limits<float>::max()) :
         _frame({ width, height }, 3),
-        _minDistToLight(minDistToLight), _maxDistToLight(maxDistToLight)
+        _minDistToLight(minDistToLight), _maxDistToLight(maxDistToLight),
+        _minPathLen(minPathLen), _maxPathLen(maxPathLen)
     {
         _frame.componentTagList(0).set("INTERPRETATION", "RED");
         _frame.componentTagList(1).set("INTERPRETATION", "GREEN");
@@ -61,7 +64,7 @@ public:
             const Ray& /* r */,
             unsigned int /* pathComponent */,
             float /* geometricPathLength */,
-            const vec4& /* opticalPathLength */,
+            const vec4& opticalPathLength,
             float distanceToLight,
             const vec4& radiance,
             const HitRecord& /* hitRecord */,
@@ -69,7 +72,8 @@ public:
             float* sampleAccumulator) const override
     {
         for (int i = 0; i < 3; i++) {
-            if (distanceToLight >= _minDistToLight && distanceToLight <= _maxDistToLight) {
+            if (distanceToLight >= _minDistToLight && distanceToLight <= _maxDistToLight
+                    && opticalPathLength[i] >= _minPathLen && opticalPathLength[i] <= _maxPathLen) {
                 sampleAccumulator[i] += radiance[i];
             }
         }
