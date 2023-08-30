@@ -178,11 +178,11 @@ public:
         TGD::Array<float> r(phases[0].dimensions(), 4);
         r.globalTagList() = phases[0].globalTagList();
         std::string totalCpuTime;
-        totalCpuTime  = phases[tau0Index  ].globalTagList().value("WurblPT/CPU_SECONDS", "unknown") + '+';
-        totalCpuTime += phases[tau90Index ].globalTagList().value("WurblPT/CPU_SECONDS", "unknown") + '+';
-        totalCpuTime += phases[tau180Index].globalTagList().value("WurblPT/CPU_SECONDS", "unknown") + '+';
-        totalCpuTime += phases[tau270Index].globalTagList().value("WurblPT/CPU_SECONDS", "unknown");
-        r.globalTagList().set("WurblPT/CPU_SECONDS", totalCpuTime);
+        totalCpuTime  = phases[tau0Index  ].globalTagList().value("WURBLPT/CPU_SECONDS", "unknown") + '+';
+        totalCpuTime += phases[tau90Index ].globalTagList().value("WURBLPT/CPU_SECONDS", "unknown") + '+';
+        totalCpuTime += phases[tau180Index].globalTagList().value("WURBLPT/CPU_SECONDS", "unknown") + '+';
+        totalCpuTime += phases[tau270Index].globalTagList().value("WURBLPT/CPU_SECONDS", "unknown");
+        r.globalTagList().set("WURBLPT/CPU_SECONDS", totalCpuTime);
         r.componentTagList(0).set("INTERPRETATION", "distance");
         r.componentTagList(1).set("INTERPRETATION", "amplitude");
         r.componentTagList(2).set("INTERPRETATION", "intensity");
