@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2019, 2020, 2021, 2022
  * Computer Graphics Group, University of Siegen (written by Martin Lambers)
- * Copyright (C) 2022, 2023
+ * Copyright (C) 2022, 2023, 2024, 2025
  * Martin Lambers <marlam@marlam.de>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -72,7 +72,7 @@ public:
     ivec3 k;
     vec3 S;
 
-    RayIntersectionHelper()
+    RayIntersectionHelper() : invDirection(0.0f), k(0), S(0.0f)
     {
     }
 

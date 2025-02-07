@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2019, 2020, 2021, 2022
  * Computer Graphics Group, University of Siegen (written by Martin Lambers)
- * Copyright (C) 2022, 2023
+ * Copyright (C) 2022, 2023, 2024, 2025
  * Martin Lambers <marlam@marlam.de>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -114,9 +114,9 @@ public:
         haveTangents = wantTangents;
         vertices.resize(pos.size() * vertexSize());
 
-        bool transform = !T.isIdentity();
-        mat4 M;
-        mat3 N;
+        const bool transform = !T.isIdentity();
+        mat4 M(1.0f);
+        mat3 N(1.0f);
         if (transform) {
             M = T.toMat4();
             N = T.toNormalMatrix();
