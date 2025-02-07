@@ -1,18 +1,18 @@
 # WurblPT
 
 WurblPT is an experimental path tracer with the following features:
-- Camera modes for surround images (360° and 180°) and stereoscopic 3D
-- Light travel distances for each path for light-in-flight rendering and
-  precise simulation of Time-of-Flight sensors
-- Camera intrinsics and lens distortion compatible to OpenCV
+- Camera modes for [surround images](https://marlam.de/wurblpt/features/rendering-surround-images/) (360° and 180°)
+  and [stereoscopic 3D](https://marlam.de/wurblpt/features/stereoscopic-rendering/)
+- Light travel distances for each path for [light-in-flight rendering](https://marlam.de/wurblpt/features/rendering-light-propagation/)
+  and [precise simulation of Time-of-Flight sensors](https://marlam.de/wurblpt/features/simulation-of-time-of-flight-sensors/)
+- Camera intrinsics and lens distortion [compatible to OpenCV](https://marlam.de/wurblpt/features/rendering-with-opencv-camera-model/)
 - Support for RGB sensors and Time-of-Flight distance sensors
-- Animation of everything in the scene (geometry, textures, cameras, ...)
-- Ground Truth generation including geometry, materials, optical flow
-- Support for rendering on HPC clusters (pure OpenMP or mixed MPI/OpenMP)
+- [Ground Truth generation](https://marlam.de/wurblpt/features/rendering-ground-truth/) including geometry, materials, optical flow
 - Support for measured materials from the [RGL material database](https://rgl.epfl.ch/materials)
-- Import of OBJ/MTL scenes
-- Export to OBJ/MTL including snapshots of animated scenes and procedural
-  textures
+- Importance sampling for any type of environment maps, [including cube maps](https://marlam.de/wurblpt/features/importance-sampling-for-cube-maps/)
+- Animation of everything in the scene (geometry, textures, cameras, ...)
+- Import of OBJ/MTL scenes, and export to OBJ/MTL including snapshots of animated scenes and procedural textures
+- Support for rendering on HPC clusters (pure OpenMP or mixed MPI/OpenMP)
 
 
 # Requirements
