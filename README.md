@@ -47,7 +47,7 @@ For use on HPC clusters:
 
 # Video Encoding and Metadata
 
-Use the AV1 codec with the mp4 container format. Example for high quality encoding:
+Use the AV1 codec with the webm or mp4 container format. Example for high quality encoding:
 ```
 ffmpeg -i input-%04d-360.png -vf format=yuv420p -c:v libaom-av1 -row-mt 1 -tile-columns 3 -tile-rows 2 -threads 64 -crf 23 -g 50 output-360.mp4
 ```
@@ -57,29 +57,10 @@ enables multithreading, `-threads 64` sets the maximum number of threads, and
 `-tile-columns 3 -tile-rows 2` results in 2^3 x 2^2 = 8x4 tiles for faster
 multithreaded encoding and decoding.
 
-For 360° video, set the appropriate metadata
-[defined by Google](https://github.com/google/spatial-media/blob/master/docs/spherical-video-rfc.md)
-and understood by [VLC](https://www.videolan.org/vlc/).
-```
-exiftool \
-	-XMP-GSpherical:Spherical="true" \
-	-XMP-GSpherical:Stitched="true" \
-	-XMP-GSpherical:StitchingSoftware="WurblPT" \
-	-XMP-GSpherical:ProjectionType="equirectangular" \
-	output-360.mp4
-```
-In the case of stereoscopic 360° video, add `-XMP-GSpherical:StereoMode="top-bottom"`.
-
-Note that [Bino](https://bino3d.org) does not yet support this metadata because
-of QtMultimedia limitations; that's why it uses [file name conventions](https://bino3d.org/bino-manual.html#file-name-conventions).
-
-With WurblPT, append the following marker to the file name just before the extension so that Bino detects the correct format:
-- Conventional 2D: no marker; example: `image.png`
-- Conventional 3D: marker `-tb`; example: `image-tb.png`
-- 180° 2D: marker `-180`; example: `image-180.png`
-- 180° 3D: marker `-180-tb`; example: `image-180-tb.png`
-- 360° 2D: marker `-360`; example: `image-360.png`
-- 360° 3D: marker `-360-tb`; example: `image-360-tb.png`
+See [this document](https://bino3d.org/metadata-for-stereo-3d-and-surround-video.html)
+from the Bino video player for information on how to set appropriate meta data
+for stereoscopic 3D and surround video, so that video players can automatically
+detect the correct modes.
 
 
 # Creating and Converting Conventional and Surround Output
