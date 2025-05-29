@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2019, 2020, 2021, 2022
  * Computer Graphics Group, University of Siegen (written by Martin Lambers)
- * Copyright (C) 2022, 2023
+ * Copyright (C) 2022, 2023, 2024, 2025
  * Martin Lambers <marlam@marlam.de>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -34,20 +34,33 @@ class SensorRGB final : public Sensor
 {
 private:
     TGD::Array<float> _frame;
-    const float _minDistToLight, _maxDistToLight;
-    const float _minPathLen, _maxPathLen;
+    float _minDistToLight, _maxDistToLight;
+    float _minPathLen, _maxPathLen;
 
 public:
+    SensorRGB()
+    {
+    }
+
     SensorRGB(unsigned int width, unsigned int height,
             float minDistToLight = 0.0f, float maxDistToLight = std::numeric_limits<float>::max(),
-            float minPathLen = 0.0f, float maxPathLen = std::numeric_limits<float>::max()) :
-        _frame({ width, height }, 3),
+            float minPathLen = 0.0f, float maxPathLen = std::numeric_limits<float>::max(),
+            const TGD::Allocator& alloc = TGD::Allocator()) :
+        _frame({ width, height }, 3, alloc),
         _minDistToLight(minDistToLight), _maxDistToLight(maxDistToLight),
         _minPathLen(minPathLen), _maxPathLen(maxPathLen)
     {
         _frame.componentTagList(0).set("INTERPRETATION", "RED");
         _frame.componentTagList(1).set("INTERPRETATION", "GREEN");
         _frame.componentTagList(2).set("INTERPRETATION", "BLUE");
+    }
+
+    SensorRGB(unsigned int width, unsigned int height, const TGD::Allocator& alloc = TGD::Allocator()) :
+        SensorRGB(width, height,
+                0.0f, std::numeric_limits<float>::max(),
+                0.0f, std::numeric_limits<float>::max(),
+                alloc)
+    {
     }
 
     virtual unsigned int width() const override
@@ -92,6 +105,11 @@ public:
     }
 
     const TGD::Array<float>& result() const
+    {
+        return _frame;
+    }
+
+    TGD::Array<float>& result()
     {
         return _frame;
     }

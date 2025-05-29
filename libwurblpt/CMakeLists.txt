@@ -1,7 +1,7 @@
 # Copyright (C) 2019, 2020, 2021, 2022
 # Computer Graphics Group, University of Siegen
 # Written by Martin Lambers <martin.lambers@uni-siegen.de>
-# Copyright (C) 2022, 2023
+# Copyright (C) 2022, 2023, 2024, 2025
 # Martin Lambers <marlam@marlam.de>
 #
 # Copying and distribution of this file, with or without modification, are
@@ -20,7 +20,7 @@ set(WURLBPT_SOVERSION 0)
 
 # Requirements
 set(CMAKE_CXX_STANDARD 20)
-find_package(libtgd REQUIRED)
+find_package(libtgd 5.0 REQUIRED)
 
 # The WURLBPT library
 include_directories(${TGD_INCLUDE_DIRS} ${WURLBPT_INCLUDE_DIRS})

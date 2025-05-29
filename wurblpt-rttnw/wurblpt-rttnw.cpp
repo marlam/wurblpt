@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2019, 2020, 2021, 2022
  * Computer Graphics Group, University of Siegen (written by Martin Lambers)
- * Copyright (C) 2022, 2023
+ * Copyright (C) 2022, 2023, 2024, 2025
  * Martin Lambers <marlam@marlam.de>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -179,7 +179,9 @@ int main(int argc, char* argv[])
                     frame);
             filename += frameString;
         }
-        filename += ".png";
+        std::string filenamePng = filename + ".png";
+        std::string filenameTgd = filename + ".tgd";
+        std::string filenameRaw = filename + ".raw";
 
         float distanceToLightMin = distanceToLightStartFirst + frame * distanceToLightStartStep;
         float distanceToLightMax = distanceToLightMin + distanceToLightWidth;
@@ -212,10 +214,17 @@ int main(int argc, char* argv[])
             distanceToLightMax = std::numeric_limits<float>::max();
             break;
         }
-        SensorRGB sensor(width, height, distanceToLightMin, distanceToLightMax, pathLenMin, pathLenMax);
+
+        // Create a special TGD file that has its raw data in a separate file (filenameRaw)
+        // and maps this to memory. We can save the TGD file (filenameTgd) before rendering,
+        // and watch rendering progress live with the qv tool.
+        TGD::MmapAllocator mmapAllocator(filenameRaw, TGD::MmapAllocator::NewFile);
+        SensorRGB sensor(width, height, distanceToLightMin, distanceToLightMax, pathLenMin, pathLenMax, mmapAllocator);
+        sensor.result().globalTagList().set("DATAFILE", filenameRaw);
+        TGD::save(sensor.result(), filenameTgd);
 
         mcpt(sensor, camera, scene, samples_sqrt, t0, t1);
-        TGD::save(toSRGB(sensor.result()), filename);
+        TGD::save(toSRGB(sensor.result()), filenamePng);
     }
 
     return 0;
