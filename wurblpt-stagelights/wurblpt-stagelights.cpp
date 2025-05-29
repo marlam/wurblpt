@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2019, 2020, 2021, 2022
  * Computer Graphics Group, University of Siegen (written by Martin Lambers)
- * Copyright (C) 2022, 2023
+ * Copyright (C) 2022, 2023, 2024, 2025
  * Martin Lambers <marlam@marlam.de>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -193,7 +193,30 @@ int main(void)
     Scene scene;
     createScene(scene, true);
 
-    SensorRGB sensor(width, height);
+    // We use the TGD MmapAllocator to store the rendering data on disk instead
+    // of in memory, which allows to render images that are too large to fit
+    // into main memory.
+    // Additionally, the main process will use a named file for the collected
+    // rendering data, which allows live inspection of the rendering progress,
+    // and avoids an io-intensive rewrite of the rendering result.
+    SensorRGB sensor;
+    if (mpiCoordinator.mainProcess()) {
+        sensor = SensorRGB(width, height, TGD::MmapAllocator("img.raw", TGD::MmapAllocator::NewFile));
+        sensor.result().globalTagList().set("DATAFILE", "img.raw");
+        // We can already save the tgd file since it only contains the meta data,
+        // the rendering data will be written directly to img.raw
+        TGD::save(sensor.result(), "img.tgd");
+    } else {
+        // Use a temporary file in the current directory to store the rendering
+        // result of each child.
+        // Note that only pages that are rendered to by this child (i.e. the blocks
+        // that this child gets to render from the main process) are actually
+        // committed to the file, and if these blocks all fit into memory they
+        // won't ever be actually written to storage.
+        // Nevertheless, you could use "/tmp" instead to use node-local storage
+        // if io becomes necessary, which might improve performance further.
+        sensor = SensorRGB(width, height, TGD::MmapAllocator("."));
+    }
 
     Projection projection(radians(50.0f), sensor.aspectRatio());
     Transformation camT(vec3(0.0f, -4.5f, -1.2f));
@@ -202,14 +225,12 @@ int main(void)
     scene.updateBVH(0.0f, 0.0f);
     mcpt(mpiCoordinator, sensor, camera, scene, samples_sqrt, 0.0f, 0.0f, params);
     if (mpiCoordinator.mainProcess()) {
-        const TGD::Array<float>& hdrImg = sensor.result();
-        TGD::save(hdrImg, "img.tgd");
 #if 0
-        TGD::Array<uint8_t> ppImg = toSRGB(scaleLuminance(hdrImg, 8.0f));
+        TGD::Array<uint8_t> ppImg = toSRGB(scaleLuminance(hdrImg, 8.0f), TGD::MmapAllocator("."));
         TGD::save(ppImg, "img-postproc.tgd");
 #endif
 #if 0
-        GroundTruth gt = getGroundTruth(sensor, camera, scene);
+        GroundTruth gt = getGroundTruth(sensor, camera, scene, TGD::MmapAllocator("."));
         TGD::save(gt.cameraSpaceGeometryNormals, "normals.tgd");
         TGD::save(gt.cameraSpacePositions, "positions.tgd");
 #endif
