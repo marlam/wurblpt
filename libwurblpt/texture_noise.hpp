@@ -242,8 +242,8 @@ public:
         float f = minFreq;
         for (int i = 0; i < freqs; i++) {
             v += a * TexturePerlinNoise::value(texcoord * f, t).r();
-            f *= 2.0;
-            a /= 2.0;
+            f *= 2.0f;
+            a /= 2.0f;
         }
         return abs(vec4(v, v, v, 0.0f));
     }

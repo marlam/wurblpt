@@ -202,7 +202,7 @@ public:
             } else {
                 phaseShift = atan(D[3] - D[1], D[0] - D[2]);
                 if (phaseShift < 0.0f)
-                    phaseShift += 2.0 * pi;
+                    phaseShift += 2.0f * pi;
                 distance = fracCModfreq() * phaseShift * 0.25f * inv_pi;
             }
             float amplitude = sqrt((D[0] - D[2]) * (D[0] - D[2]) + (D[1] - D[3]) * (D[1] - D[3])) * pi_2;

@@ -1025,7 +1025,7 @@ BRDF::~BRDF() { }
 
 /// Numerically more robust way of evaluating 'std::acos(d.z())'
 inline float elevation(const Vector3f &d) {
-    return 2.f * asin(.5f * std::sqrt(sqr(d.x()) + sqr(d.y()) + sqr(d.z() - 1.f)));
+    return 2.f * asinf(.5f * std::sqrt(sqr(d.x()) + sqr(d.y()) + sqr(d.z() - 1.f)));
 }
 
 float BRDF::pdf(const Vector3f &wi, const Vector3f &wo) const {
