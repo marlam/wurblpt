@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
     Scene scene;
     createScene(argv[1], scene);
 
-    SensorRGB sensor(width, height);
+    SensorRGB sensor(width, height, TGD::Allocator());
     Optics optics(Projection(radians(35.0f), sensor.aspectRatio()));
 
     Transformation cameraTransformation(vec3(25.0f, 6.0f, -1.0f), toQuat(radians(vec3(-20.0f, 90.0f, 0.0f))));

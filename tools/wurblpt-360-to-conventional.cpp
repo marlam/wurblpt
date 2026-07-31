@@ -70,7 +70,7 @@ TGD::ArrayContainer getConventionalFrom360Mono(const TGD::ArrayContainer& a, siz
                 EnvironmentMapEquiRect::CompatibilitySurroundVideo));
     scene.updateBVH();
 
-    SensorRGB sensor(width, height);
+    SensorRGB sensor(width, height, TGD::Allocator());
     Optics optics(Projection(openingAngle, sensor.aspectRatio()));
     Camera camera(optics, camT);
 

@@ -139,7 +139,7 @@ int main(int argc, char* argv[])
     Scene scene;
     createScene(sponzaFileName, envmapFileName, scene);
 
-    SensorRGB sensor(width, height);
+    SensorRGB sensor(width, height, TGD::Allocator());
 
 #if 1
     Optics optics(Projection(radians(70.0f), (stereoscopicDistance > 0.0f ? 2.0f : 1.0f) * sensor.aspectRatio()));

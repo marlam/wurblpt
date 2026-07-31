@@ -180,7 +180,7 @@ int main(void)
     Scene scene;
     createScene(scene);
 
-    SensorRGB sensor(width, height);
+    SensorRGB sensor(width, height, TGD::Allocator());
 
     vec2 c = vec2(398.5f, 301.3f);
     vec2 f = vec2(400.42f, 300.42f);

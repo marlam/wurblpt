@@ -184,7 +184,7 @@ int main(int argc, char* argv[])
     Scene scene;
     createScene(scene, params);
 
-    SensorRGB sensor(width, height);
+    SensorRGB sensor(width, height, TGD::Allocator());
     Optics optics(Projection(radians(50.0f), sensor.aspectRatio()));
 
     Camera camera(optics, new CameraAnimation);

@@ -344,7 +344,7 @@ int main(int argc, char* argv[])
     Scene scene;
     createScene(scene);
 
-    SensorRGB sensor(width, height);
+    SensorRGB sensor(width, height, TGD::Allocator());
     Optics optics(Projection(radians(70.0f), (stereoscopicDistance > 0.0f ? 2.0f : 1.0f) * sensor.aspectRatio()));
     vec3 lookfrom(0.0f, 1.7f, 0.0f);
     vec3 lookat(0.0f, 1.7f, -1.0f);

@@ -105,7 +105,7 @@ int main(void)
     if (stereoscopic) {
         height *= 2;
     }
-    SensorRGB sensor(width, height);
+    SensorRGB sensor(width, height, TGD::Allocator());
     Optics optics(Projection(radians(30.0f), aspectRatio), LensDistortion(), LensDepthOfField(0.06f, 7.0f));
 
     vec3 lookfrom(10.0f, 2.0f, 3.0f);

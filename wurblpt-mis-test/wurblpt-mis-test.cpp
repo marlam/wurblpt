@@ -110,7 +110,7 @@ int main(void)
     createScene(sceneWithoutHotSpots, false);
     sceneWithoutHotSpots.updateBVH();
 
-    SensorRGB sensor(width, height);
+    SensorRGB sensor(width, height, TGD::Allocator());
 
     Projection projection(radians(50.0f), sensor.aspectRatio());
     Transformation camT(vec3(0.0f, -4.5f, -1.2f));

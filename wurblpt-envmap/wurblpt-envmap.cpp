@@ -87,7 +87,7 @@ int main(void)
     Scene scene;
     createScene(scene);
 
-    SensorRGB sensor(width, height);
+    SensorRGB sensor(width, height, TGD::Allocator());
     Optics optics(Projection(radians(50.0f), sensor.aspectRatio()));
 
     Camera camera(optics, Transformation(vec3(0.0f, 0.0f, 2.5f)));

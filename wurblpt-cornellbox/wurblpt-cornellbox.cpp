@@ -251,7 +251,7 @@ int main(void)
     Scene scene;
     createScene(scene, tallBoxMaterial, shortObjectType, shortObjectMaterial, animated);
 
-    SensorRGB sensor(width, height);
+    SensorRGB sensor(width, height, TGD::Allocator());
     Optics optics(Projection(radians(50.0f), sensor.aspectRatio()));
 
     vec3 lookfrom(0.0f, 1.0f, 3.2f);

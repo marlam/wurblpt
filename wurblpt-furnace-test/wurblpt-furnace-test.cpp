@@ -66,7 +66,7 @@ int main(void)
     SceneComponent* sphere = new Sphere(vec3(0.0f), 1.0f, mat);
     scene.take(sphere);
 
-    SensorRGB sensor(width, height);
+    SensorRGB sensor(width, height, TGD::Allocator());
     Optics optics(Projection(radians(40.0f), sensor.aspectRatio()));
 
     Camera camera(optics, Transformation(vec3(0.0f, 0.0f, 5.0f)));
